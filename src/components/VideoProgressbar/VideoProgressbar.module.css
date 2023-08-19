@@ -1,0 +1,70 @@
+:root {
+  --range-thumb-color: #f50;
+  --range-track-color: #ccc;
+  --range-thumb-hover-shadow-color: rgba(255, 85, 0, 0.1);
+  --range-thumb-active-shadow-color: #f50;
+  --range-thumb-focus-shadow-color: #f50;
+}
+
+.range {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+  /* creating a custom design */
+  width: 100%;
+  cursor: pointer;
+  outline: none;
+  border-radius: 15px;
+
+  /* New additions */
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    var(--range-thumb-color) 50%,
+    var(--range-track-color) 50%
+  );
+}
+
+/* Thumb: webkit */
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  background-color: var(--range-thumb-color);
+  border-radius: 50%;
+  border: none;
+
+  transition: all 0.2s ease-in-out;
+}
+
+/* Thumb: Firefox */
+.range::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background-color: var(--range-thumb-color);
+  border-radius: 50%;
+  border: none;
+
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover, active & focus Thumb: Webkit */
+
+.range::-webkit-slider-thumb:hover {
+  box-shadow: inset -1px -1px var(--range-thumb-hover-shadow-color),
+    inset -2px -2px var(--range-thumb-hover-shadow-color),
+    inset -3px -3px var(--range-thumb-hover-shadow-color),
+    inset -4px -4px var(--range-thumb-hover-shadow-color),
+    inset -5px -5px var(--range-thumb-hover-shadow-color),
+    inset -6px -6px var(--range-thumb-hover-shadow-color),
+    inset -7px -7px var(--range-thumb-hover-shadow-color),
+    inset -8px -8px var(--range-thumb-hover-shadow-color),
+    inset -9px -9px var(--range-thumb-hover-shadow_color),
+    inset -10px -10px var(--range-thumb-hover-shadow_color);
+}
+.range:active::-webkit-slider-thumb {
+  box-shadow: inset -1px -1px var(--range-thumb-active-shadow_color),
+    inset -2px -2px var(--range-thumb-active-shadow_color),
+    inset -3px -3px var(--range-thumb-active-shadow_color), inset -4px -4px;
+}
