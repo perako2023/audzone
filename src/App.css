@@ -12,13 +12,26 @@
     'aside main main'
     'footer footer footer';
   grid-template-columns: 240px 1fr 1fr;
-  grid-template-rows: 64px 1fr 72px;
+  grid-template-rows: max-content 1fr 72px;
 }
 
 .root__header {
   grid-area: header;
   display: flex;
+  align-items: center;
   border-bottom: 1px solid var(--grid-line-color);
+  border: 1px solid #eee;
+}
+
+.menu-btn {
+  cursor: pointer;
+  padding: 1em;
+  /* aspect-ratio: 1; */
+  &:hover {
+    transition: border-radius 200ms ease-in-out;
+    border-radius: 50%;
+    background-color: #111;
+  }
 }
 
 .root__aside {
@@ -34,9 +47,9 @@
 .root__main {
   grid-area: main;
   display: flex;
-  gap: 1rem;
+  gap: 1em;
   overflow: hidden;
-  padding: 1rem;
+  padding: 1em;
 }
 
 .media-player {
@@ -64,6 +77,7 @@
     border-radius: 8px;
     &:hover {
       background-color: #111;
+      transition: background-color 100ms ease-in-out;
     }
     &.active {
       background-color: #111;
@@ -72,6 +86,9 @@
 }
 
 @media (max-width: 768px) {
+  .root__header {
+    padding: 0;
+  }
   .root__aside {
     display: none;
   }
