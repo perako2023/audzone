@@ -16,7 +16,7 @@ const Layout = () => {
           <a className="nav-link">Browse</a>
           <a className="nav-link">Settings</a>
           <a className="nav-link">Downloads</a>
-          <a className="nav-link">Library</a>
+          <a className="nav-link active">Library</a>
         </nav>
       </aside>
       <main className="root__main">

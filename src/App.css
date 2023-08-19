@@ -14,19 +14,23 @@
   grid-template-columns: 240px 1fr 1fr;
   grid-template-rows: 64px 1fr 72px;
 }
+
 .root__header {
   grid-area: header;
   display: flex;
   border-bottom: 1px solid var(--grid-line-color);
 }
+
 .root__aside {
   grid-area: aside;
   border-right: 1px solid var(--grid-line-color);
 }
+
 .root__footer {
   grid-area: footer;
   border-top: 1px solid var(--grid-line-color);
 }
+
 .root__main {
   grid-area: main;
   display: flex;
@@ -39,11 +43,18 @@
 .navbar {
   display: flex;
   flex-direction: column;
-}
-
-.nav-link {
-  color: red;
-  border: 1px solid #eee;
+  padding: 0.5em;
+  .nav-link {
+    cursor: pointer;
+    padding: 0.8em 1em;
+    border-radius: 8px;
+    &:hover {
+      background-color: #111;
+    }
+    &.active {
+      background-color: #111;
+    }
+  }
 }
 
 @media (max-width: 768px) {
