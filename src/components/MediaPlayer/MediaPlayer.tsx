@@ -54,8 +54,12 @@ export const MediaPlayer = () => {
 
   function handleSkip(seconds: number) {
     const newDuration = internalPlayer!.getCurrentTime() + seconds
-    setPlayedSeconds(newDuration)
-    internalPlayer?.seekTo(newDuration)
+    if (newDuration <= 0) {
+      setPlayedSeconds(0)
+    } else {
+      setPlayedSeconds(newDuration)
+      internalPlayer?.seekTo(newDuration)
+    }
   }
 
   function handleProgress(state: OnProgressProps): void {
