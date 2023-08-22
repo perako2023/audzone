@@ -1,9 +1,14 @@
 import './App.css'
 import MediaPlayer from './components/MediaPlayer'
 import Playlist from './components/Playlist'
+import { UserStateProvider } from './Context/UserStateContext'
 
 export const App = () => {
-  return <Layout />
+  return (
+    <UserStateProvider>
+      <Layout />
+    </UserStateProvider>
+  )
 }
 
 const Layout = () => {

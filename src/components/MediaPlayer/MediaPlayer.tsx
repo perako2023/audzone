@@ -4,6 +4,7 @@ import VideoProgressbar from '../VideoProgressbar'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { OnProgressProps } from 'react-player/base'
 import { secToHMS } from '../../utils'
+import { useUserState } from '../../Context/UserStateContext'
 
 type InternalPlayer = {
   playVideo: () => void
@@ -26,7 +27,7 @@ export const MediaPlayer = () => {
   const [internalPlayer, setInternalPlayer] = useState<InternalPlayer>()
   const [playing, setPlaying] = useState(false)
   const [playedSeconds, setPlayedSeconds] = useState(0)
-  const [videoId /* , setVideoId */] = useState('qsEOdJzhL1c')
+  const [videoId] = useUserState().useYtVideoId
 
   useEffect(() => {
     // keep checking until it gets the internal player
@@ -92,7 +93,7 @@ export const MediaPlayer = () => {
               src="https://miro.medium.com/v2/resize:fit:1400/1*sVSPf1ZdHnSSmAfDm328Hg.png"
               alt="thumbnail"
             />
-            <div className={css['infos']}>
+            <div className={css['info']}>
               <div className={css['info__title']}>
                 {internalPlayer?.playerInfo.videoData?.title}
               </div>

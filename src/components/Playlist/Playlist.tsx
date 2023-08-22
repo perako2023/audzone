@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import css from './Playlist.module.css'
 import { PlaylistItemData, YT_V3 } from '../../utils/yt_v3'
+import { useUserState } from '../../Context/UserStateContext'
 
 type PlaylistProps = {
   title?: string /* REVIEW - not optional? */
@@ -11,6 +12,8 @@ export const Playlist = (props: PlaylistProps) => {
   const { youtubePlaylistUrl } = props
   console.log(youtubePlaylistUrl)
   const [items, setItems] = useState<PlaylistItemData[]>()
+
+  const [, setVideoId] = useUserState().useYtVideoId
 
   useEffect(() => {
     const regex = /^.*(youtu.be\/|list=)([^#&?]*).*/
@@ -26,8 +29,18 @@ export const Playlist = (props: PlaylistProps) => {
     } /* REVIEW - check if youtubePlaylistUrl is a valid youtube playlist URL */
   }, [youtubePlaylistUrl])
 
+  function handlePlaylistClick(
+    event: React.MouseEvent<HTMLUListElement, MouseEvent>
+  ): void {
+    const target = event.target as HTMLUListElement
+    if (target.className.match('playlist-item')) {
+      console.log(target.id)
+      setVideoId(target.id)
+    }
+  }
+
   return (
-    <ul className={css['playlist']}>
+    <ul className={css['playlist']} onClick={handlePlaylistClick}>
       {items?.map((item) => {
         return <PlaylistItem {...item} key={item.id} />
       })}

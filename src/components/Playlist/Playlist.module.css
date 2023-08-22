@@ -7,6 +7,7 @@
 }
 
 .playlist-item {
+  cursor: pointer;
   border: 1px solid #111;
   overflow: hidden;
   flex-shrink: 0;
@@ -14,6 +15,10 @@
   padding: 0.2em;
   display: flex;
   gap: 0.5em;
+
+  &:hover {
+    background-color: #111;
+  }
 
   & * {
     pointer-events: none;
