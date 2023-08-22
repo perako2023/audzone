@@ -1,5 +1,6 @@
 import './App.css'
 import MediaPlayer from './components/MediaPlayer'
+import Playlist from './components/Playlist'
 
 export const App = () => {
   return <Layout />
@@ -33,14 +34,8 @@ const Layout = () => {
         <section className="media-player-wrapper">
           <MediaPlayer />
         </section>
-        <section className="playlist">
-          <ul>
-            <li>playable item</li>
-            <li>playable item</li>
-            <li>playable item</li>
-            <li>playable item</li>
-          </ul>
         <section className="playlist-wrapper">
+          <Playlist />
         </section>
       </main>
 

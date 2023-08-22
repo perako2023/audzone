@@ -1,0 +1,63 @@
+.playlist {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.playlist-item {
+  border: 1px solid #111;
+  overflow: hidden;
+  flex-shrink: 0;
+  height: 106px;
+  padding: 0.2em;
+  display: flex;
+  gap: 0.5em;
+
+  & * {
+    pointer-events: none;
+  }
+
+  .item__thumbnail {
+    position: relative;
+    height: 100%;
+    aspect-ratio: 16/10;
+    border-radius: 8px;
+    /* background-repeat: no-repeat; */
+    background-size: cover;
+    background-position: center;
+    /* object-fit: cover; */
+    &::before {
+      position: absolute;
+      right: 0.2em;
+      bottom: 0.2em;
+      content: attr(data-duration);
+      background-color: #111;
+      padding: 0.1em 0.2em;
+      border-radius: 5px;
+    }
+  }
+
+  .item__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    white-space: nowrap;
+    &::before {
+      content: attr(data-title);
+      font-size: 1.2em;
+    }
+    &::after {
+      content: attr(data-channel-title);
+      opacity: 0.6;
+    }
+
+    &::before,
+    &::after {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}
