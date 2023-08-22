@@ -1,41 +1,50 @@
+import { useEffect, useState } from 'react'
 import css from './Playlist.module.css'
+import { PlaylistItemData, YT_V3 } from '../../utils/yt_v3'
 
-export const Playlist = () => {
+type PlaylistProps = {
+  title?: string /* REVIEW - not optional? */
+  youtubePlaylistUrl: string /* TODO - maybe convert type to only allow youtube playlist url */
+}
+
+export const Playlist = (props: PlaylistProps) => {
+  const { youtubePlaylistUrl } = props
+  console.log(youtubePlaylistUrl)
+  const [items, setItems] = useState<PlaylistItemData[]>()
+
+  useEffect(() => {
+    const regex = /^.*(youtu.be\/|list=)([^#&?]*).*/
+    const match = youtubePlaylistUrl.match(regex)
+    /* check if url is a valid youtube playlist url */
+    if (match && match[2]) {
+      console.log(
+        `The URL is a valid YouTube playlist URL with id: ${match[2]}`
+      )
+      getVideos(youtubePlaylistUrl).then((items) => setItems(items))
+    } else {
+      console.log('The URL is not a valid YouTube playlist URL')
+    } /* REVIEW - check if youtubePlaylistUrl is a valid youtube playlist URL */
+  }, [youtubePlaylistUrl])
+
   return (
     <ul className={css['playlist']}>
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
-      <PlaylistItem />
+      {items?.map((item) => {
+        return <PlaylistItem {...item} key={item.id} />
+      })}
     </ul>
   )
 }
 
-const PlaylistItem = () => {
-  const duration = '10:00'
-  const imgSrc =
-    'https://miro.medium.com/v2/resize:fit:1400/1*sVSPf1ZdHnSSmAfDm328Hg.png'
-  const title = 'Title'
-  const channelTitle = 'Channel Title'
+// type PlaylistItemProps = {}
+const PlaylistItem = (props: PlaylistItemData) => {
+  const { duration, thumbnailUrl, title, channelTitle, id } = props
 
   return (
-    <li className={css['playlist-item']}>
+    <li className={css['playlist-item']} id={id}>
       <div
         className={css['item__thumbnail']}
-        style={{ backgroundImage: `url(${imgSrc})` }}
-        data-duration={duration}></div>
+        style={{ backgroundImage: `url(${thumbnailUrl})` }}
+        data-duration={YT_V3.formatDuration(duration, 'colon')}></div>
 
       <div
         className={css['item__info']}
@@ -43,4 +52,23 @@ const PlaylistItem = () => {
         data-channel-title={channelTitle}></div>
     </li>
   )
+}
+
+async function getVideos(playlistUrl: string) {
+  /* TODO - add error handler */
+  const localPlaylistData = JSON.parse(
+    localStorage.getItem(`pl-${YT_V3.parsePlaylistId(playlistUrl)}`)!
+  )
+  if (localPlaylistData !== null) {
+    console.log('local data is being used')
+    return localPlaylistData
+  } else {
+    console.log('fetch data is being used')
+    const items = await YT_V3.getPlaylistVideos(playlistUrl)
+    localStorage.setItem(
+      `pl-${YT_V3.parsePlaylistId(playlistUrl)}`,
+      JSON.stringify(items)
+    )
+    return items
+  }
 }

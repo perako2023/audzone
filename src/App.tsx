@@ -35,7 +35,7 @@ const Layout = () => {
           <MediaPlayer />
         </section>
         <section className="playlist-wrapper">
-          <Playlist />
+          <Playlist youtubePlaylistUrl="https://www.youtube.com/watch?v=3PbpStWW3bM&list=PLOV5noHgXBgPJkoP1nHAxBefXs0mO-foo&index=2" />
         </section>
       </main>
 
