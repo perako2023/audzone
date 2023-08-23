@@ -6,7 +6,7 @@ type UserStateProviderProps = {
   children: ReactNode
 }
 type UserState = {
-  useYtVideoId: [string, React.Dispatch<React.SetStateAction<string>>]
+  useNowPlayingVideoId: [string, React.Dispatch<React.SetStateAction<string>>]
 }
 
 export const UserStateContext = createContext<UserState | null>(null)
@@ -16,15 +16,12 @@ export const useUserState = () => useContext(UserStateContext)!
 const defaultYtVideoId = '3PbpStWW3bM' /* REVIEW - default ytVideoId*/
 
 export const UserStateProvider = ({ children }: UserStateProviderProps) => {
-  const [ytVideoId, setYtVideoId] = useLocalStorage(
-    'yt-video-id',
-    defaultYtVideoId
-  )
+  const useNowPlayingVideoId = useLocalStorage('yt-video-id', defaultYtVideoId)
 
   return (
     <UserStateContext.Provider
       value={{
-        useYtVideoId: [ytVideoId, setYtVideoId],
+        useNowPlayingVideoId,
       }}>
       {children}
     </UserStateContext.Provider>

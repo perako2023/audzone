@@ -27,7 +27,7 @@ export const MediaPlayer = () => {
   const [internalPlayer, setInternalPlayer] = useState<InternalPlayer>()
   const [playing, setPlaying] = useState(false)
   const [playedSeconds, setPlayedSeconds] = useState(0)
-  const [videoId] = useUserState().useYtVideoId
+  const [videoId] = useUserState().useNowPlayingVideoId
 
   useEffect(() => {
     // keep checking until it gets the internal player
@@ -114,7 +114,9 @@ export const MediaPlayer = () => {
               max={internalPlayer?.getDuration?.()}
               className={css['duration__range']}
             />
-            <div>{secToHMS(internalPlayer?.getDuration() ?? 0) || '0:00'}</div>
+            <div>
+              {secToHMS(internalPlayer?.getDuration?.() ?? 0) || '0:00'}
+            </div>
           </div>
           <div className={css['player-controls']}>
             <button className={`${css['control__btn']} tablet-hidden`}>

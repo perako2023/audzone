@@ -13,7 +13,7 @@ export const Playlist = (props: PlaylistProps) => {
   console.log(youtubePlaylistUrl)
   const [items, setItems] = useState<PlaylistItemData[]>()
 
-  const [, setVideoId] = useUserState().useYtVideoId
+  const [, setVideoId] = useUserState().useNowPlayingVideoId
 
   useEffect(() => {
     const regex = /^.*(youtu.be\/|list=)([^#&?]*).*/
