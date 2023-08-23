@@ -14,7 +14,7 @@ type InternalPlayer = {
   getCurrentTime: () => number
   getDuration: () => number
   playerInfo: {
-    videoData?: {
+    videoData: {
       title: string
       author: string
     }
@@ -31,25 +31,26 @@ export const MediaPlayer = () => {
 
   useEffect(() => {
     // keep checking until it gets the internal player
-    setLoading(true)
-    const interval = setInterval(() => {
+    console.count('youTubePlayerRef changed')
+    function tryUpdateInternalPlayer() {
       console.count('interval for internal player getter is running\n count ')
       const player =
         youTubePlayerRef.current?.getInternalPlayer() as InternalPlayer
-      if (player) {
+      if (player?.playerInfo?.videoData) {
         setInternalPlayer(player)
         setLoading(false)
         clearInterval(interval)
       }
-    }, 1000)
-
-    return () => {
-      clearInterval(interval)
     }
+    const interval = setInterval(tryUpdateInternalPlayer, 1000)
+    return () => clearInterval(interval)
   }, [youTubePlayerRef])
 
   function handlePlayPause() {
-    setPlaying(!playing)
+    setPlaying((prevPlaying) => {
+      prevPlaying ? internalPlayer?.pauseVideo() : internalPlayer?.playVideo()
+      return !prevPlaying
+    })
   }
 
   function handleSkip(seconds: number) {
@@ -99,10 +100,10 @@ export const MediaPlayer = () => {
             />
             <div className={css['info']}>
               <div className={css['info__title']}>
-                {internalPlayer?.playerInfo.videoData?.title}
+                {internalPlayer?.playerInfo.videoData.title}
               </div>
               <div className={css['info__channel-title']}>
-                {internalPlayer?.playerInfo.videoData?.author || '???'}
+                {internalPlayer?.playerInfo.videoData.author ?? '???'}
               </div>
             </div>
           </div>
@@ -111,12 +112,10 @@ export const MediaPlayer = () => {
             <VideoProgressbar
               onChange={handleSliderSeek}
               value={playedSeconds}
-              max={internalPlayer?.getDuration?.()}
+              max={internalPlayer?.getDuration()}
               className={css['duration__range']}
             />
-            <div>
-              {secToHMS(internalPlayer?.getDuration?.() ?? 0) || '0:00'}
-            </div>
+            <div>{secToHMS(internalPlayer?.getDuration() ?? 0) || '0:00'}</div>
           </div>
           <div className={css['player-controls']}>
             <button className={`${css['control__btn']} tablet-hidden`}>
