@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import css from './Playlist.module.css'
-import { PlaylistItemData, YT_V3 } from '../../utils/yt_v3'
+import { YoutubePlaylistItem, YT_V3 } from '../../utils/yt_v3'
 import { useUserState } from '../../Context/UserStateContext'
 
 type PlaylistProps = {
@@ -10,8 +10,7 @@ type PlaylistProps = {
 
 export const Playlist = (props: PlaylistProps) => {
   const { youtubePlaylistUrl } = props
-  console.log(youtubePlaylistUrl)
-  const [items, setItems] = useState<PlaylistItemData[]>()
+  const [playlistItems, setPlaylistItems] = useState<YoutubePlaylistItem[]>()
 
   const [, setVideoId] = useUserState().useNowPlayingVideoId
 
@@ -23,25 +22,30 @@ export const Playlist = (props: PlaylistProps) => {
       console.log(
         `The URL is a valid YouTube playlist URL with id: ${match[2]}`
       )
-      getVideos(youtubePlaylistUrl).then((items) => setItems(items))
+      getVideos(youtubePlaylistUrl).then((items) => setPlaylistItems(items))
     } else {
       console.log('The URL is not a valid YouTube playlist URL')
     } /* REVIEW - check if youtubePlaylistUrl is a valid youtube playlist URL */
   }, [youtubePlaylistUrl])
 
-  function handlePlaylistClick(
-    event: React.MouseEvent<HTMLUListElement, MouseEvent>
-  ): void {
-    const target = event.target as HTMLUListElement
-    if (target.className.match('playlist-item')) {
-      console.log(target.id)
-      setVideoId(target.id)
+  function handlePlaylistClick(event: React.MouseEvent): void {
+    const targetPlaylistItem = event.target as HTMLLIElement
+    if (targetPlaylistItem.className.match('playlist-item')) {
+      setVideoId((prevVideoId) => {
+        const nowPlayingPlaylistItem = document.querySelector(
+          `[data-yt-video-id="${prevVideoId}"]`
+        )
+        nowPlayingPlaylistItem?.classList.remove(css['now-playing'])
+        targetPlaylistItem.classList.add(css['now-playing'])
+
+        return targetPlaylistItem.dataset.ytVideoId!
+      })
     }
   }
 
   return (
     <ul className={css['playlist']} onClick={handlePlaylistClick}>
-      {items?.map((item) => {
+      {playlistItems?.map((item) => {
         return <PlaylistItem {...item} key={item.id} />
       })}
     </ul>
@@ -49,11 +53,15 @@ export const Playlist = (props: PlaylistProps) => {
 }
 
 // type PlaylistItemProps = {}
-const PlaylistItem = (props: PlaylistItemData) => {
+const PlaylistItem = (props: YoutubePlaylistItem) => {
   const { duration, thumbnailUrl, title, channelTitle, id } = props
+  const [nowPlayingVideoId] = useUserState().useNowPlayingVideoId
+  const nowPlayingClass = nowPlayingVideoId === id ? css['now-playing'] : ''
 
   return (
-    <li className={css['playlist-item']} id={id}>
+    <li
+      className={`${css['playlist-item']} ${nowPlayingClass}`}
+      data-yt-video-id={id}>
       <div
         className={css['item__thumbnail']}
         style={{ backgroundImage: `url(${thumbnailUrl})` }}
@@ -79,7 +87,7 @@ async function getVideos(playlistUrl: string) {
     console.log('fetch data is being used')
     const items = await YT_V3.getPlaylistVideos(playlistUrl)
     localStorage.setItem(
-      `pl-${YT_V3.parsePlaylistId(playlistUrl)}`,
+      `pl-${YT_V3.parsePlaylistId(playlistUrl)}`, //NOTE - prefix: "pl-" for playlist Id
       JSON.stringify(items)
     )
     return items

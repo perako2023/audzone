@@ -1,4 +1,4 @@
-export type PlaylistItemData = {
+export type YoutubePlaylistItem = {
   id: string
   title: string
   duration: string
@@ -35,7 +35,7 @@ export class YT_V3 {
       channelTitle: ytDataApiV3Item.snippet.channelTitle,
       duration: ytDataApiV3Item.contentDetails.duration,
       thumbnailUrl: ytDataApiV3Item.snippet.thumbnails.medium.url,
-    } as PlaylistItemData
+    } as YoutubePlaylistItem
   }
 
   static parsePlaylistId(url: string) {
@@ -74,7 +74,7 @@ export class YT_V3 {
 
     return response.items.map((item: YtDataApiV3Item) => {
       return this.#filterItem(item)
-    }) as Array<PlaylistItemData>
+    }) as Array<YoutubePlaylistItem>
   }
 
   static formatDuration(ISO_8601_duration: string, type: 'hms' | 'colon') {

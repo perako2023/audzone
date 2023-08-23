@@ -33,7 +33,7 @@ export const MediaPlayer = () => {
     // keep checking until it gets the internal player
     setLoading(true)
     const interval = setInterval(() => {
-      console.count('interval for internal player getter is running\n count: ')
+      console.count('interval for internal player getter is running\n count ')
       const player =
         youTubePlayerRef.current?.getInternalPlayer() as InternalPlayer
       if (player) {
