@@ -56,7 +56,7 @@
     white-space: nowrap;
     &::before {
       content: attr(data-title);
-      font-size: 1.2em;
+      font-size: 1.2rem;
     }
     &::after {
       content: attr(data-channel-title);

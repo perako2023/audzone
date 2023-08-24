@@ -37,6 +37,7 @@
     border-radius: 6px;
     object-fit: cover;
     pointer-events: none;
+    overflow: hidden;
   }
   .info {
     display: flex;
@@ -48,7 +49,7 @@
       white-space: nowrap;
     }
     .info__title {
-      font-size: 1.2em;
+      font-size: 1.2rem;
     }
     .info__channel-title {
       opacity: 0.6;
