@@ -86,51 +86,44 @@ export const MediaPlayer = () => {
         controls
         url={`https://www.youtube.com/watch?v=${videoId}`}
       />
-
-      {loading /* REVIEW */ ? (
-        <Skeleton />
-      ) : (
-        <div className={css['player-manager']}>
-          <div className={css['player-info']}>
-            <img
-              className={css['info__thumbnail']}
-              src="https://miro.medium.com/v2/resize:fit:1400/1*sVSPf1ZdHnSSmAfDm328Hg.png"
-              alt="thumbnail"
-            />
-            <div className={css['info']}>
-              <div className={css['info__title']}>{internalPlayer?.playerInfo.videoData.title}</div>
-              <div className={css['info__channel-title']}>
-                {internalPlayer?.playerInfo.videoData.author ?? '???'}
-              </div>
+      <div className={css['player-manager']}>
+        <div className={css['player-info']}>
+          <img
+            className={css['info__thumbnail']}
+            src="https://miro.medium.com/v2/resize:fit:1400/1*sVSPf1ZdHnSSmAfDm328Hg.png"
+            alt="thumbnail"
+          />
+          <div className={css['info']}>
+            <div className={css['info__title']}>{internalPlayer?.playerInfo.videoData.title}</div>
+            <div className={css['info__channel-title']}>
+              {internalPlayer?.playerInfo.videoData.author ?? '???'}
             </div>
           </div>
-          <div className={css['player-duration']}>
-            <div>{secToHMS(playedSeconds)}</div>
-            <VideoProgressbar
-              onChange={handleSliderSeek}
-              value={playedSeconds}
-              max={internalPlayer?.getDuration()}
-              className={css['duration__range']}
-            />
-            <div>{secToHMS(internalPlayer?.getDuration() ?? 0) || '0:00'}</div>
-          </div>
-          <div className={css['player-controls']}>
-            <button className={`${css['control__btn']} tablet-hidden`}>p</button>
-            <button onClick={() => handleSkip(-5)} className={css['control__btn']}>
-              -5
-            </button>
-            <button onClick={handlePlayPause} className={css['control__btn']}>
-              {playing ? '⏸' : '▶'}
-            </button>
-            <button
-              onClick={() => handleSkip(5)}
-              className={`${css['control__btn']} tablet-hidden`}>
-              +5
-            </button>
-            <button className={`${css['control__btn']} tablet-hidden`}>n</button>
-          </div>
         </div>
-      )}
+        <div className={css['player-duration']}>
+          <div>{secToHMS(playedSeconds)}</div>
+          <VideoProgressbar
+            onChange={handleSliderSeek}
+            value={playedSeconds}
+            max={internalPlayer?.getDuration()}
+            className={css['duration__range']}
+          />
+          <div>{secToHMS(internalPlayer?.getDuration() ?? 0) || '0:00'}</div>
+        </div>
+        <div className={css['player-controls']}>
+          <button className={`${css['control__btn']} tablet-hidden`}>p</button>
+          <button onClick={() => handleSkip(-5)} className={css['control__btn']}>
+            -5
+          </button>
+          <button onClick={handlePlayPause} className={css['control__btn']}>
+            {playing ? '⏸' : '▶'}
+          </button>
+          <button onClick={() => handleSkip(5)} className={`${css['control__btn']} tablet-hidden`}>
+            +5
+          </button>
+          <button className={`${css['control__btn']} tablet-hidden`}>n</button>
+        </div>
+      </div>
     </div>
   )
 }
