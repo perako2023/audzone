@@ -42,10 +42,12 @@ export const Navbar = (props: NavbarProps) => {
   )
 
   useEffect(() => {
+    //* load playlist items if active tab is a playlist by changing the tab
     const playlistTab = playlistTabs.find(
       (playlistTab) => playlistTab.id === activeTabId
     )
     if (playlistTab?.ytPlaylistUrl) props.onTabChange?.(playlistTab)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   /* const [playlistTabs, setPlaylistTabs] = useState<PageTab[]>([
@@ -97,7 +99,7 @@ export const Navbar = (props: NavbarProps) => {
       ))}
 
       <div className="navbar__divider"></div>
-      <button className="btn-new-playlist" onClick={() => setShowForm(true)}>
+      <button className="new-playlist-btn" onClick={() => setShowForm(true)}>
         ➕ New Playlist
       </button>
       <NewPlaylistForm

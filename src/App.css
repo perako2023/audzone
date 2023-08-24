@@ -72,7 +72,7 @@
   flex-direction: column;
   padding: 0.5em;
   .nav-link,
-  .btn-new-playlist {
+  .new-playlist-btn {
     cursor: pointer;
     padding: 0.8em 1em;
     border-radius: 8px;
@@ -93,8 +93,8 @@
   }
 }
 
-.btn-new-playlist {
-  /* margin: 1.5rem 0; */
+.new-playlist-btn {
+  margin-bottom: 1rem;
   background-color: #222;
   border-radius: 2rem;
   text-align: center;

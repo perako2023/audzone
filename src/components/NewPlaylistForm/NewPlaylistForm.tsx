@@ -1,4 +1,4 @@
-import { FormEvent } from 'react'
+import { useEffect, useRef } from 'react'
 
 type NewPlaylistFormProps = {
   showForm: boolean
@@ -7,22 +7,35 @@ type NewPlaylistFormProps = {
 }
 export type PlaylistFormData = {
   title: string
-  url: string //REVIEW - maybe turn into a yt playlist url?
+  url: string
 }
 export const NewPlaylistForm = (props: NewPlaylistFormProps) => {
   const { showForm } = props
   let formClasses = 'new-playlist-form'
   if (showForm === true) formClasses += ' form--active'
+  const urlInputRef = useRef<HTMLInputElement>(null)
 
-  function handleFormSubmit(e: FormEvent): void {
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (e.target instanceof HTMLFormElement) {
-      const formData = Object.fromEntries(new FormData(e.target))
-      props.onSubmit?.(formData as PlaylistFormData) //TODO - validate to only allow youtube playlist URL
+    // prettier-ignore
+    const ytPlaylistUrlRegex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/.*(?:list=)([^&]*)/
+    const match = urlInputRef.current?.value.match(ytPlaylistUrlRegex)
+    if (match) {
+      const playlistFormData = Object.fromEntries(new FormData(e.currentTarget))
+      props.onSubmit?.(playlistFormData as PlaylistFormData)
+    } else {
+      e.currentTarget.reportValidity()
+      throw new Error('The URL is not a valid YouTube playlist URL')
     }
   }
 
-  function handleFormClicks(e: React.MouseEvent): void {
+  useEffect(() => {
+    urlInputRef.current?.setCustomValidity(
+      'Please enter a valid YouTube playlist URL'
+    )
+  }, [])
+
+  function handleFormClicks(e: React.MouseEvent) {
     const target = e.target as HTMLElement
     if (target.className.match('form-cancel')) {
       props.onCancel?.()
@@ -31,6 +44,7 @@ export const NewPlaylistForm = (props: NewPlaylistFormProps) => {
 
   return (
     <form
+      noValidate
       onSubmit={handleFormSubmit}
       onClick={handleFormClicks}
       className={formClasses}>
@@ -42,6 +56,7 @@ export const NewPlaylistForm = (props: NewPlaylistFormProps) => {
           required
           type="url"
           placeholder="youtube playlist url"
+          ref={urlInputRef}
         />
         <section className={'form-btns'}>
           <button className="form-cancel" type="button">

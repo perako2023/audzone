@@ -4,8 +4,8 @@ import { YoutubePlaylistItem, YT_V3 } from '../../utils/yt_v3'
 import { useUserState } from '../../Context/UserStateContext'
 
 type PlaylistProps = {
-  title?: string /* REVIEW - not optional? */
-  youtubePlaylistUrl: string /* TODO - maybe convert type to only allow youtube playlist url */
+  // title?: string /* REVIEW - not optional? */
+  youtubePlaylistUrl: string
 }
 
 export const Playlist = (props: PlaylistProps) => {
@@ -17,15 +17,15 @@ export const Playlist = (props: PlaylistProps) => {
   useEffect(() => {
     const regex = /^.*(youtu.be\/|list=)([^#&?]*).*/
     const match = youtubePlaylistUrl.match(regex)
-    /* check if url is a valid youtube playlist url */
+    //* check if url is a valid youtube playlist url
     if (match && match[2]) {
       console.log(
         `The URL is a valid YouTube playlist URL with id: ${match[2]}`
       )
       getVideos(youtubePlaylistUrl).then((items) => setPlaylistItems(items))
     } else {
-      console.log('The URL is not a valid YouTube playlist URL')
-    } /* REVIEW - check if youtubePlaylistUrl is a valid youtube playlist URL */
+      console.error('The URL is not a valid YouTube playlist URL\n')
+    }
   }, [youtubePlaylistUrl])
 
   function handlePlaylistClick(event: React.MouseEvent): void {
