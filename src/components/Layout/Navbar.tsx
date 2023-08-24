@@ -32,20 +32,12 @@ type NavbarProps = {
 }
 export const Navbar = (props: NavbarProps) => {
   const [showForm, setShowForm] = useState(false)
-  const [activeTabId, setActiveTabId] = useLocalStorage(
-    'active-tab-id',
-    'tab-library'
-  )
-  const [playlistTabs, setPlaylistTabs] = useLocalStorage<PageTab[]>(
-    'playlist-tabs',
-    []
-  )
+  const [activeTabId, setActiveTabId] = useLocalStorage('active-tab-id', 'tab-library')
+  const [playlistTabs, setPlaylistTabs] = useLocalStorage<PageTab[]>('playlist-tabs', [])
 
   useEffect(() => {
     //* load playlist items if active tab is a playlist by changing the tab
-    const playlistTab = playlistTabs.find(
-      (playlistTab) => playlistTab.id === activeTabId
-    )
+    const playlistTab = playlistTabs.find((playlistTab) => playlistTab.id === activeTabId)
     if (playlistTab?.ytPlaylistUrl) props.onTabChange?.(playlistTab)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

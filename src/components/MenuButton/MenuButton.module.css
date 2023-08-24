@@ -1,0 +1,60 @@
+.menu-btn {
+  --bar-width: 2rem;
+  --bar-height: 4px;
+  --bar-transition: all 0.5s ease-in-out;
+  --bar-radius: 5px;
+  --bar-color: #fff;
+  --bar-shadow: 0 2px 5px rgba(255, 101, 47, 0.2);
+
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 95%;
+  aspect-ratio: 1;
+  cursor: pointer;
+  transition: var(--bar-transition);
+
+  @media (min-width: 768px) {
+    display: none;
+    &:hover {
+      background-color: #222;
+      border-radius: 50%;
+      transition: border-radius 0.2s ease-in-out;
+    }
+  }
+}
+.menu-btn input,
+.menu-btn::before,
+.menu-btn::after {
+  width: var(--bar-width);
+  height: var(--bar-height);
+  border-radius: var(--bar-radius);
+  background: var(--bar-color);
+  box-shadow: var(--bar-shadow);
+  transition: var(--bar-transition);
+}
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  transform: translateY(-10px);
+}
+.menu-btn::after {
+  content: '';
+  position: absolute;
+  transform: translateY(10px);
+}
+/* ANIMATION */
+.menu-btn.open input {
+  transform: translateX(-50px);
+  background: transparent;
+  box-shadow: none;
+}
+.menu-btn.open::before {
+  /* transform: rotate(45deg) translate(35px, -35px); */
+  transform: rotate(45deg);
+}
+.menu-btn.open::after {
+  /* transform: rotate(-45deg) translate(35px, 35px); */
+  transform: rotate(-45deg);
+}

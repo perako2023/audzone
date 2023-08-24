@@ -17,7 +17,6 @@ export const NewPlaylistForm = (props: NewPlaylistFormProps) => {
 
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    // prettier-ignore
     const ytPlaylistUrlRegex = /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/.*(?:list=)([^&]*)/
     const match = urlInputRef.current?.value.match(ytPlaylistUrlRegex)
     if (match) {
@@ -30,9 +29,7 @@ export const NewPlaylistForm = (props: NewPlaylistFormProps) => {
   }
 
   useEffect(() => {
-    urlInputRef.current?.setCustomValidity(
-      'Please enter a valid YouTube playlist URL'
-    )
+    urlInputRef.current?.setCustomValidity('Please enter a valid YouTube playlist URL')
   }, [])
 
   function handleFormClicks(e: React.MouseEvent) {
@@ -43,11 +40,7 @@ export const NewPlaylistForm = (props: NewPlaylistFormProps) => {
   }
 
   return (
-    <form
-      noValidate
-      onSubmit={handleFormSubmit}
-      onClick={handleFormClicks}
-      className={formClasses}>
+    <form noValidate onSubmit={handleFormSubmit} onClick={handleFormClicks} className={formClasses}>
       <fieldset>
         <legend>New Playlist</legend>
         <input name="title" required type="text" placeholder="Title" />

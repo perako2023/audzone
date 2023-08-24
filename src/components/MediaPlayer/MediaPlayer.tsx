@@ -34,8 +34,7 @@ export const MediaPlayer = () => {
     console.count('youTubePlayerRef changed')
     function tryUpdateInternalPlayer() {
       console.count('interval for internal player getter is running\n count ')
-      const player =
-        youTubePlayerRef.current?.getInternalPlayer() as InternalPlayer
+      const player = youTubePlayerRef.current?.getInternalPlayer() as InternalPlayer
       if (player?.playerInfo?.videoData) {
         setInternalPlayer(player)
         setLoading(false)
@@ -99,9 +98,7 @@ export const MediaPlayer = () => {
               alt="thumbnail"
             />
             <div className={css['info']}>
-              <div className={css['info__title']}>
-                {internalPlayer?.playerInfo.videoData.title}
-              </div>
+              <div className={css['info__title']}>{internalPlayer?.playerInfo.videoData.title}</div>
               <div className={css['info__channel-title']}>
                 {internalPlayer?.playerInfo.videoData.author ?? '???'}
               </div>
@@ -118,12 +115,8 @@ export const MediaPlayer = () => {
             <div>{secToHMS(internalPlayer?.getDuration() ?? 0) || '0:00'}</div>
           </div>
           <div className={css['player-controls']}>
-            <button className={`${css['control__btn']} tablet-hidden`}>
-              p
-            </button>
-            <button
-              onClick={() => handleSkip(-5)}
-              className={css['control__btn']}>
+            <button className={`${css['control__btn']} tablet-hidden`}>p</button>
+            <button onClick={() => handleSkip(-5)} className={css['control__btn']}>
               -5
             </button>
             <button onClick={handlePlayPause} className={css['control__btn']}>
@@ -134,9 +127,7 @@ export const MediaPlayer = () => {
               className={`${css['control__btn']} tablet-hidden`}>
               +5
             </button>
-            <button className={`${css['control__btn']} tablet-hidden`}>
-              n
-            </button>
+            <button className={`${css['control__btn']} tablet-hidden`}>n</button>
           </div>
         </div>
       )}
