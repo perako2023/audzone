@@ -27,7 +27,7 @@ export const MediaPlayer = () => {
   const [internalPlayer, setInternalPlayer] = useState<InternalPlayer>()
   const [playing, setPlaying] = useState(false)
   const [playedSeconds, setPlayedSeconds] = useState(0)
-  const [videoId] = useUserState().useNowPlayingVideoId
+  const [videoId] = useUserState().useNowPlayingVideo.id
 
   useEffect(() => {
     // keep checking until it gets the internal player

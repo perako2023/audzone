@@ -2,11 +2,16 @@
 import { ReactNode, createContext, useContext } from 'react'
 import { useLocalStorage } from '../hooks'
 
+type NowPlayingVideo = {
+  id: [string, React.Dispatch<React.SetStateAction<string>>]
+}
+
+type UserState = {
+  useNowPlayingVideo: NowPlayingVideo
+}
+
 type UserStateProviderProps = {
   children: ReactNode
-}
-type UserState = {
-  useNowPlayingVideoId: [string, React.Dispatch<React.SetStateAction<string>>]
 }
 
 export const UserStateContext = createContext<UserState | null>(null)
@@ -21,7 +26,9 @@ export const UserStateProvider = ({ children }: UserStateProviderProps) => {
   return (
     <UserStateContext.Provider
       value={{
-        useNowPlayingVideoId,
+        useNowPlayingVideo: {
+          id: useNowPlayingVideoId,
+        },
       }}>
       {children}
     </UserStateContext.Provider>

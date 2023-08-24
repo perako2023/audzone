@@ -12,16 +12,14 @@ export const Playlist = (props: PlaylistProps) => {
   const { youtubePlaylistUrl } = props
   const [playlistItems, setPlaylistItems] = useState<YoutubePlaylistItem[]>()
 
-  const [, setVideoId] = useUserState().useNowPlayingVideoId
+  const [, setVideoId] = useUserState().useNowPlayingVideo.id
 
   useEffect(() => {
     const regex = /^.*(youtu.be\/|list=)([^#&?]*).*/
     const match = youtubePlaylistUrl.match(regex)
     //* check if url is a valid youtube playlist url
     if (match && match[2]) {
-      console.log(
-        `The URL is a valid YouTube playlist URL with id: ${match[2]}`
-      )
+      console.log(`The URL is a valid YouTube playlist URL with id: ${match[2]}`)
       getVideos(youtubePlaylistUrl).then((items) => setPlaylistItems(items))
     } else {
       console.error('The URL is not a valid YouTube playlist URL\n')
@@ -32,9 +30,7 @@ export const Playlist = (props: PlaylistProps) => {
     const targetPlaylistItem = event.target as HTMLLIElement
     if (targetPlaylistItem.className.match('playlist-item')) {
       setVideoId((prevVideoId) => {
-        const nowPlayingPlaylistItem = document.querySelector(
-          `[data-yt-video-id="${prevVideoId}"]`
-        )
+        const nowPlayingPlaylistItem = document.querySelector(`[data-yt-video-id="${prevVideoId}"]`)
         nowPlayingPlaylistItem?.classList.remove(css['now-playing'])
         targetPlaylistItem.classList.add(css['now-playing'])
 
@@ -55,22 +51,17 @@ export const Playlist = (props: PlaylistProps) => {
 // type PlaylistItemProps = {}
 const PlaylistItem = (props: YoutubePlaylistItem) => {
   const { duration, thumbnailUrl, title, channelTitle, id } = props
-  const [nowPlayingVideoId] = useUserState().useNowPlayingVideoId
+  const [nowPlayingVideoId] = useUserState().useNowPlayingVideo.id
   const nowPlayingClass = nowPlayingVideoId === id ? css['now-playing'] : ''
 
   return (
-    <li
-      className={`${css['playlist-item']} ${nowPlayingClass}`}
-      data-yt-video-id={id}>
+    <li className={`${css['playlist-item']} ${nowPlayingClass}`} data-yt-video-id={id}>
       <div
         className={css['item__thumbnail']}
         style={{ backgroundImage: `url(${thumbnailUrl})` }}
         data-duration={YT_V3.formatDuration(duration, 'colon')}></div>
 
-      <div
-        className={css['item__info']}
-        data-title={title}
-        data-channel-title={channelTitle}></div>
+      <div className={css['item__info']} data-title={title} data-channel-title={channelTitle}></div>
     </li>
   )
 }
