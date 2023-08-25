@@ -17,7 +17,7 @@ type InternalPlayer = {
 }
 
 export const MediaPlayer = () => {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const youTubePlayerRef = useRef<YouTubePlayer>(null)
     const [internalPlayer, setInternalPlayer] = useState<InternalPlayer>()
     const [playing, setPlaying] = useState(false)
@@ -98,7 +98,9 @@ export const MediaPlayer = () => {
                         alt="thumbnail"
                     />
                     <div className={css['info']}>
-                        <div className={css['info__title']}>{title}</div>
+                        <div className={css['info__title']}>
+                            {title ?? 'No video is currently being played'}
+                        </div>
                         <div className={css['info__channel-title']}>
                             {channelTitle ?? '???'}
                         </div>
