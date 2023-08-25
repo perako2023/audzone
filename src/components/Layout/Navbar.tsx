@@ -93,26 +93,28 @@ export const Navbar = (props: NavbarProps) => {
     }
 
     return (
-        <nav className="navbar" onClick={handleNavbarClick}>
-            {PRIMARY_TABS.map((primaryTab) => (
-                <NavLink data={primaryTab} key={primaryTab.id} />
-            ))}
-
-            <div className="navbar__divider"></div>
-            <button
-                className="new-playlist-btn"
-                onClick={() => setShowForm(true)}>
-                ➕ New Playlist
-            </button>
+        <>
             <NewPlaylistForm
                 showForm={showForm}
                 onCancel={() => setShowForm(false)}
                 onSubmit={handlePlaylistFormSubmit}
             />
+            <nav className="navbar" onClick={handleNavbarClick}>
+                {PRIMARY_TABS.map((primaryTab) => (
+                    <NavLink data={primaryTab} key={primaryTab.id} />
+                ))}
 
-            {playlistTabs.map((playlistTab) => (
-                <NavLink data={playlistTab} key={playlistTab.id} />
-            ))}
-        </nav>
+                <div className="navbar__divider"></div>
+                <button
+                    className="new-playlist-btn"
+                    onClick={() => setShowForm(true)}>
+                    ➕ New Playlist
+                </button>
+
+                {playlistTabs.map((playlistTab) => (
+                    <NavLink data={playlistTab} key={playlistTab.id} />
+                ))}
+            </nav>
+        </>
     )
 }
