@@ -10,22 +10,22 @@ export type PageTab = {
 }
 
 const PRIMARY_TABS: PageTab[] = [
-    {
+    /* {
         title: 'Browse',
         id: 'tab-browse',
-    },
+    }, */
     {
         title: 'Settings',
         id: 'tab-settings',
     },
-    {
+    /* {
         title: 'Downloads',
         id: 'tab-downloads',
-    },
-    {
+    }, */
+    /* {
         title: 'Library',
         id: 'tab-library',
-    },
+    }, */
 ]
 type NavbarProps = {
     onTabChange?: (newTab: PageTab) => void
@@ -49,12 +49,6 @@ export const Navbar = (props: NavbarProps) => {
         if (playlistTab?.ytPlaylistUrl) props.onTabChange?.(playlistTab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    /* const [playlistTabs, setPlaylistTabs] = useState<PageTab[]>([
-    { id: 'tab-test', title: 'Test Playlist' },
-    { id: 'tab-test-1', title: 'Test Playlist 1' },
-    { id: 'tab-test-2', title: 'Test Playlist 2' },
-  ]) */
 
     function handleNavbarClick(event: React.MouseEvent) {
         const targetNavLink = event.target as HTMLElement
@@ -105,15 +99,24 @@ export const Navbar = (props: NavbarProps) => {
                 ))}
 
                 <div className="navbar__divider"></div>
+
                 <button
                     className="new-playlist-btn"
                     onClick={() => setShowForm(true)}>
-                    ➕ New Playlist
+                    <svg
+                        fill="currentcolor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="1em"
+                        viewBox="0 0 448 512">
+                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                    </svg>{' '}
+                    New Playlist
                 </button>
-
-                {playlistTabs.map((playlistTab) => (
-                    <NavLink data={playlistTab} key={playlistTab.id} />
-                ))}
+                <section className="navbar__playlist-wrapper">
+                    {playlistTabs.map((playlistTab) => (
+                        <NavLink data={playlistTab} key={playlistTab.id} />
+                    ))}
+                </section>
             </nav>
         </>
     )

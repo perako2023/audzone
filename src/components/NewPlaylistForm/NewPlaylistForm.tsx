@@ -24,7 +24,9 @@ export const NewPlaylistForm = (props: NewPlaylistFormProps) => {
         e.preventDefault()
         const ytPlaylistUrlRegex =
             /^(?:https?:\/\/)?(?:www\.)?youtube\.com\/.*(?:list=)([^&]*)/
-        const match = urlInputRef.current?.value.match(ytPlaylistUrlRegex)
+        const match = urlInputRef.current?.value
+            .trim()
+            .match(ytPlaylistUrlRegex)
         if (match) {
             const playlistFormData = Object.fromEntries(
                 new FormData(e.currentTarget)
