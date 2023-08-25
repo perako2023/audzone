@@ -14,10 +14,10 @@ const PRIMARY_TABS: PageTab[] = [
         title: 'Browse',
         id: 'tab-browse',
     }, */
-    {
+    /* {
         title: 'Settings',
         id: 'tab-settings',
-    },
+    }, */
     /* {
         title: 'Downloads',
         id: 'tab-downloads',
@@ -98,7 +98,7 @@ export const Navbar = (props: NavbarProps) => {
                     <NavLink data={primaryTab} key={primaryTab.id} />
                 ))}
 
-                <div className="navbar__divider"></div>
+                {/* <div className="navbar__divider"></div> */}
 
                 <button
                     className="new-playlist-btn"
