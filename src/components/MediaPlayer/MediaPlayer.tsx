@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { OnProgressProps } from 'react-player/base'
 import { YT_V3, secToHMS } from '../../utils'
 import { useVideoState } from '../../Context/VideoStateContext'
+import { PlayPauseIcon, SkipBackIcon, SkipForwardIcon } from './ButtonIcons'
 
 type InternalPlayer = {
     playVideo: () => void
@@ -86,7 +87,7 @@ export const MediaPlayer = () => {
                 ref={youTubePlayerRef}
                 height={'100%'}
                 width={'100%'}
-                controls
+                // controls
                 url={`https://www.youtube.com/watch?v=${videoId}`}
             />
             <div className={css['player-manager']}>
@@ -114,26 +115,20 @@ export const MediaPlayer = () => {
                     <div>{YT_V3.formatDuration(duration ?? '', 'colon')}</div>
                 </div>
                 <div className={css['player-controls']}>
-                    <button className={`${css['control__btn']} tablet-hidden`}>
-                        p
-                    </button>
                     <button
                         onClick={() => handleSkip(-5)}
                         className={css['control__btn']}>
-                        -5
+                        <SkipBackIcon />
                     </button>
                     <button
                         onClick={handlePlayPause}
                         className={css['control__btn']}>
-                        {playing ? '⏸' : '▶'}
+                        <PlayPauseIcon playing={playing} />
                     </button>
                     <button
                         onClick={() => handleSkip(5)}
                         className={`${css['control__btn']} tablet-hidden`}>
-                        +5
-                    </button>
-                    <button className={`${css['control__btn']} tablet-hidden`}>
-                        n
+                        <SkipForwardIcon />
                     </button>
                 </div>
             </div>
