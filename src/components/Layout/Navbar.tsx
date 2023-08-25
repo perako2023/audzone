@@ -4,105 +4,115 @@ import { YT_V3 } from '../../utils'
 import NewPlaylistForm, { PlaylistFormData } from '../NewPlaylistForm'
 
 export type PageTab = {
-  title: string
-  id: `tab-${string}` //NOTE - prefix: "tab-" for switchable tabs nav-link
-  ytPlaylistUrl?: string
+    title: string
+    id: `tab-${string}` //NOTE - prefix: "tab-" for switchable tabs nav-link
+    ytPlaylistUrl?: string
 }
 
 const PRIMARY_TABS: PageTab[] = [
-  {
-    title: 'Browse',
-    id: 'tab-browse',
-  },
-  {
-    title: 'Settings',
-    id: 'tab-settings',
-  },
-  {
-    title: 'Downloads',
-    id: 'tab-downloads',
-  },
-  {
-    title: 'Library',
-    id: 'tab-library',
-  },
+    {
+        title: 'Browse',
+        id: 'tab-browse',
+    },
+    {
+        title: 'Settings',
+        id: 'tab-settings',
+    },
+    {
+        title: 'Downloads',
+        id: 'tab-downloads',
+    },
+    {
+        title: 'Library',
+        id: 'tab-library',
+    },
 ]
 type NavbarProps = {
-  onTabChange?: (newTab: PageTab) => void
+    onTabChange?: (newTab: PageTab) => void
 }
 export const Navbar = (props: NavbarProps) => {
-  const [showForm, setShowForm] = useState(false)
-  const [activeTabId, setActiveTabId] = useLocalStorage('active-tab-id', 'tab-library')
-  const [playlistTabs, setPlaylistTabs] = useLocalStorage<PageTab[]>('playlist-tabs', [])
+    const [showForm, setShowForm] = useState(false)
+    const [activeTabId, setActiveTabId] = useLocalStorage(
+        'active-tab-id',
+        'tab-library'
+    )
+    const [playlistTabs, setPlaylistTabs] = useLocalStorage<PageTab[]>(
+        'playlist-tabs',
+        []
+    )
 
-  useEffect(() => {
-    //* load playlist items if active tab is a playlist by changing the tab
-    const playlistTab = playlistTabs.find((playlistTab) => playlistTab.id === activeTabId)
-    if (playlistTab?.ytPlaylistUrl) props.onTabChange?.(playlistTab)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    useEffect(() => {
+        //* load playlist items if active tab is a playlist by changing the tab
+        const playlistTab = playlistTabs.find(
+            (playlistTab) => playlistTab.id === activeTabId
+        )
+        if (playlistTab?.ytPlaylistUrl) props.onTabChange?.(playlistTab)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-  /* const [playlistTabs, setPlaylistTabs] = useState<PageTab[]>([
+    /* const [playlistTabs, setPlaylistTabs] = useState<PageTab[]>([
     { id: 'tab-test', title: 'Test Playlist' },
     { id: 'tab-test-1', title: 'Test Playlist 1' },
     { id: 'tab-test-2', title: 'Test Playlist 2' },
   ]) */
 
-  function handleNavbarClick(event: React.MouseEvent) {
-    const targetNavLink = event.target as HTMLElement
-    if (targetNavLink.className.match('nav-link')) {
-      const newTabId = targetNavLink.id
-      setActiveTabId(newTabId)
-      const targetTab = [...PRIMARY_TABS, ...playlistTabs].find(
-        (playlistTab) => playlistTab.id === newTabId
-      )
-      props.onTabChange?.(targetTab!)
+    function handleNavbarClick(event: React.MouseEvent) {
+        const targetNavLink = event.target as HTMLElement
+        if (targetNavLink.className.match('nav-link')) {
+            const newTabId = targetNavLink.id
+            setActiveTabId(newTabId)
+            const targetTab = [...PRIMARY_TABS, ...playlistTabs].find(
+                (playlistTab) => playlistTab.id === newTabId
+            )
+            props.onTabChange?.(targetTab!)
+        }
     }
-  }
 
-  function handlePlaylistFormSubmit(playlistFormData: PlaylistFormData) {
-    setShowForm(false)
-    const playlistId = YT_V3.parsePlaylistId(playlistFormData.url)
-    setPlaylistTabs([
-      ...playlistTabs,
-      {
-        title: playlistFormData.title,
-        id: `tab-${playlistId}`,
-        ytPlaylistUrl: playlistFormData.url,
-      },
-    ])
-  }
+    function handlePlaylistFormSubmit(playlistFormData: PlaylistFormData) {
+        setShowForm(false)
+        const playlistId = YT_V3.parsePlaylistId(playlistFormData.url)
+        setPlaylistTabs([
+            ...playlistTabs,
+            {
+                title: playlistFormData.title,
+                id: `tab-${playlistId}`,
+                ytPlaylistUrl: playlistFormData.url,
+            },
+        ])
+    }
 
-  const NavLink = ({ data }: { data: PageTab }) => {
-    let className = 'nav-link'
-    if (data.id === activeTabId) className += ' active'
-    if (data.ytPlaylistUrl !== undefined) className += ' playlist-nav-link'
+    const NavLink = ({ data }: { data: PageTab }) => {
+        let className = 'nav-link'
+        if (data.id === activeTabId) className += ' active'
+        if (data.ytPlaylistUrl) className += ' playlist-nav-link'
+        return (
+            <a id={data.id} className={className}>
+                {data.title}
+            </a>
+        )
+    }
+
     return (
-      <a id={data.id} className={className}>
-        {data.title}
-      </a>
+        <nav className="navbar" onClick={handleNavbarClick}>
+            {PRIMARY_TABS.map((primaryTab) => (
+                <NavLink data={primaryTab} key={primaryTab.id} />
+            ))}
+
+            <div className="navbar__divider"></div>
+            <button
+                className="new-playlist-btn"
+                onClick={() => setShowForm(true)}>
+                ➕ New Playlist
+            </button>
+            <NewPlaylistForm
+                showForm={showForm}
+                onCancel={() => setShowForm(false)}
+                onSubmit={handlePlaylistFormSubmit}
+            />
+
+            {playlistTabs.map((playlistTab) => (
+                <NavLink data={playlistTab} key={playlistTab.id} />
+            ))}
+        </nav>
     )
-  }
-
-  return (
-    <nav className="navbar" onClick={handleNavbarClick}>
-      {PRIMARY_TABS.map((primaryTab) => (
-        <NavLink data={primaryTab} key={primaryTab.id} />
-      ))}
-
-      <div className="navbar__divider"></div>
-      <button className="new-playlist-btn" onClick={() => setShowForm(true)}>
-        ➕ New Playlist
-      </button>
-      <NewPlaylistForm
-        showForm={showForm}
-        onCancel={() => setShowForm(false)}
-        onSubmit={handlePlaylistFormSubmit}
-      />
-
-      {playlistTabs.map((playlistTab) => (
-        <NavLink data={playlistTab} key={playlistTab.id} />
-      ))}
-    </nav>
-  )
 }
