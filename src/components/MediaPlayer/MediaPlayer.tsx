@@ -44,7 +44,10 @@ export const MediaPlayer = () => {
             }
         }
         const interval = setInterval(tryUpdateInternalPlayer, 1000)
+        //* will only check for videoId once
+        if (!videoId) clearInterval(interval)
         return () => clearInterval(interval)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [youTubePlayerRef])
 
     function handlePlayPause() {
