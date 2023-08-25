@@ -96,7 +96,7 @@ export class YT_V3 {
             case 'colon':
                 return (
                     `${H && parseInt(H) + ':'}` +
-                    `${M && parseInt(M) + ':'}` +
+                    `${parseInt(M || '0') + ':'}` +
                     // prettier-ignore
                     `${S ? parseInt(S).toString().padStart(2, '0') : ISO_8601_duration}`
                 )

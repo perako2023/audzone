@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { ReactNode, createContext, useContext, useState } from 'react'
+import { ReactNode, createContext, useContext } from 'react'
 import { YoutubePlaylistItem } from '../utils/yt_v3'
+import { useLocalStorage } from '../hooks'
 
 type VideoState = Partial<YoutubePlaylistItem>
 
@@ -13,9 +14,12 @@ export const useVideoState = () => useContext(VideoStateContext)!
 export const useVideoStateUpdate = () => useContext(VideoStateUpdateContext)!
 
 export const VideoStateProvider = ({ children = '' as ReactNode }) => {
-    const [videoState, setVideoState] = useState<VideoState>({
-        id: '3PbpStWW3bM',
-    })
+    const [videoState, setVideoState] = useLocalStorage<VideoState>(
+        'video-state',
+        {
+            id: '3PbpStWW3bM',
+        }
+    )
 
     return (
         <VideoStateContext.Provider value={videoState}>

@@ -23,23 +23,21 @@ export const MediaPlayer = () => {
     const [playedSeconds, setPlayedSeconds] = useState(0)
     const {
         id: videoId,
-        thumbnailUrl: thumbnailUrl,
+        thumbnailUrl,
         duration,
         title,
         channelTitle,
     } = useVideoState()
 
     useEffect(() => {
-        // keep checking until it gets the internal player
+        //* keep checking until it gets the internal player
         console.count('youTubePlayerRef changed')
         function tryUpdateInternalPlayer() {
-            console.count(
-                'interval for internal player getter is running\n count '
-            )
-            const player =
-                youTubePlayerRef.current?.getInternalPlayer() as InternalPlayer
+            // prettier-ignore
+            console.count('interval for internal player getter is running\n count ')
+            const player = youTubePlayerRef.current?.getInternalPlayer()
             if (player) {
-                setInternalPlayer(player)
+                setInternalPlayer(player as InternalPlayer)
                 setLoading(false)
                 clearInterval(interval)
             }
