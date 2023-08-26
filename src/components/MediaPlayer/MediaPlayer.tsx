@@ -68,10 +68,7 @@ export const MediaPlayer = () => {
 
     function handleProgress(state: OnProgressProps): void {
         const currentTime = state.playedSeconds
-        setPlayedSeconds(() => {
-            internalPlayer?.seekTo(currentTime)
-            return Math.floor(currentTime)
-        })
+        setPlayedSeconds(Math.floor(currentTime))
     }
 
     function handleSliderSeek(event: ChangeEvent<HTMLInputElement>): void {
