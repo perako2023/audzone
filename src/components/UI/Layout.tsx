@@ -8,11 +8,11 @@ export const Layout = () => {
     const [activePlaylistUrl, setActivePlaylistUrl] = useState('')
     const asideRef = useRef<HTMLElement>(null)
 
-    function handlePlaylistTabChange(newTab: PageTab): void {
-        setActivePlaylistUrl(newTab.ytPlaylistUrl ?? '')
+    function handlePlaylistTabChange(newTab: PageTab | undefined): void {
+        setActivePlaylistUrl(newTab?.ytPlaylistUrl ?? '')
     }
 
-    function handleMenuBtnClick({ isMenuOpen }: MenuButton) {
+    function handleMenuBtnClick(isMenuOpen: boolean) {
         asideRef.current?.classList.toggle('open', isMenuOpen)
     }
 
@@ -30,8 +30,10 @@ export const Layout = () => {
                     <MediaPlayer />
                 </section>
                 <section className="playlist-wrapper">
-                    {activePlaylistUrl && (
+                    {activePlaylistUrl ? (
                         <Playlist youtubePlaylistUrl={activePlaylistUrl} />
+                    ) : (
+                        'Create new playlist to see data'
                     )}
                 </section>
             </main>

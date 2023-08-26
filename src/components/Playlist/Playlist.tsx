@@ -17,7 +17,7 @@ export const Playlist = ({ youtubePlaylistUrl = '' }) => {
         const regex = /^.*(youtu.be\/|list=)([^#&?]*).*/
         const match = youtubePlaylistUrl.match(regex)
         //* check if url is a valid youtube playlist url
-        if (match && match[2]) {
+        if (match?.[2]) {
             console.log(
                 `The URL is a valid YouTube playlist URL with id: ${match[2]}`
             )
@@ -31,13 +31,12 @@ export const Playlist = ({ youtubePlaylistUrl = '' }) => {
 
     function handlePlaylistClick(event: React.MouseEvent): void {
         const targetPlaylistItem = event.target as HTMLLIElement
-        if (targetPlaylistItem.className.match('playlist-item')) {
-            const targetItemId = targetPlaylistItem.dataset.ytVideoId!
-            const newVideoState = playlistItems.find(
-                (item) => item.id === targetItemId
-            )
-            if (newVideoState) updateVideoState(newVideoState)
-        }
+        if (!targetPlaylistItem.className.match('playlist-item')) return
+        const targetItemId = targetPlaylistItem.dataset.ytVideoId!
+        const newVideoState = playlistItems.find(
+            (item) => item.id === targetItemId
+        )
+        if (newVideoState) updateVideoState(newVideoState)
     }
 
     return (
@@ -62,12 +61,14 @@ const PlaylistItem = (props: YoutubePlaylistItem) => {
             <div
                 className={css['item__thumbnail']}
                 style={{ backgroundImage: `url(${thumbnailUrl})` }}
-                data-duration={YT_V3.formatDuration(duration, 'colon')}></div>
+                data-duration={YT_V3.formatDuration(duration, 'colon')}
+            />
 
             <div
                 className={css['item__info']}
                 data-title={title}
-                data-channel-title={channelTitle}></div>
+                data-channel-title={channelTitle}
+            />
         </li>
     )
 }
@@ -77,10 +78,7 @@ async function getVideos(playlistUrl: string) {
     const localPlaylistData = JSON.parse(
         localStorage.getItem(`pl-${YT_V3.parsePlaylistId(playlistUrl)}`)!
     )
-    if (localPlaylistData !== null) {
-        console.log('local data is being used')
-        return localPlaylistData
-    } else {
+    if (localPlaylistData === null) {
         console.log('fetch data is being used')
         const items = await YT_V3.getPlaylistVideos(playlistUrl)
         localStorage.setItem(
@@ -88,5 +86,8 @@ async function getVideos(playlistUrl: string) {
             JSON.stringify(items)
         )
         return items
+    } else {
+        console.log('local data is being used')
+        return localPlaylistData
     }
 }

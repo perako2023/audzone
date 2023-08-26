@@ -1,0 +1,58 @@
+.navbar {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+    min-width: 240px;
+    .nav-link,
+    .new-playlist-btn {
+        cursor: pointer;
+        padding: 0.8em 1em;
+        border-radius: 8px;
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+
+        &:hover {
+            background-color: #222;
+            transition: background-color 100ms ease-in-out;
+        }
+        &.active {
+            background-color: #222;
+        }
+    }
+
+    .navbar__divider {
+        height: 1px;
+        background-color: #292929;
+        margin: 1rem 0;
+    }
+}
+
+.navbar__playlist-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.playlist-nav-context-menu {
+    visibility: initial;
+    scale: 0;
+    border: 1px solid #454545;
+    position: fixed;
+    border-radius: 5px;
+    background-color: #222;
+    z-index: 10;
+
+    &.open {
+        scale: 1;
+    }
+
+    & li {
+        padding: 0.5em 2em;
+        cursor: pointer;
+    }
+    & li:hover {
+        background-color: #454545;
+    }
+}

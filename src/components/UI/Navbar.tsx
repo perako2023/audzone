@@ -1,12 +1,15 @@
+import './navbar.css'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from '../../hooks'
 import { YT_V3 } from '../../utils'
 import NewPlaylistForm, { PlaylistFormData } from '../NewPlaylistForm'
+import { PlaylistNavContextMenu } from './PlaylistNavContextMenu'
 
+//NOTE - prefix: "tab-" for switchable tabs nav-link
 export type PageTab = {
     title: string
-    id: `tab-${string}` //NOTE - prefix: "tab-" for switchable tabs nav-link
-    ytPlaylistUrl?: string
+    ytPlaylistId: string
+    ytPlaylistUrl: string
 }
 
 const PRIMARY_TABS: PageTab[] = [
@@ -28,14 +31,11 @@ const PRIMARY_TABS: PageTab[] = [
     }, */
 ]
 type NavbarProps = {
-    onTabChange?: (newTab: PageTab) => void
+    onTabChange?: (newTab: PageTab | undefined) => void
 }
 export const Navbar = (props: NavbarProps) => {
     const [showForm, setShowForm] = useState(false)
-    const [activeTabId, setActiveTabId] = useLocalStorage(
-        'active-tab-id',
-        'tab-library'
-    )
+    const [activeTabId, setActiveTabId] = useLocalStorage('active-tab-id', '')
     const [playlistTabs, setPlaylistTabs] = useLocalStorage<PageTab[]>(
         'playlist-tabs',
         []
@@ -44,7 +44,7 @@ export const Navbar = (props: NavbarProps) => {
     useEffect(() => {
         //* load playlist items if active tab is a playlist by changing the tab
         const playlistTab = playlistTabs.find(
-            (playlistTab) => playlistTab.id === activeTabId
+            (playlistTab) => playlistTab.ytPlaylistId === activeTabId
         )
         if (playlistTab?.ytPlaylistUrl) props.onTabChange?.(playlistTab)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,14 +52,15 @@ export const Navbar = (props: NavbarProps) => {
 
     function handleNavbarClick(event: React.MouseEvent) {
         const targetNavLink = event.target as HTMLElement
-        if (targetNavLink.className.match('nav-link')) {
-            const newTabId = targetNavLink.id
-            setActiveTabId(newTabId)
-            const targetTab = [...PRIMARY_TABS, ...playlistTabs].find(
-                (playlistTab) => playlistTab.id === newTabId
-            )
-            props.onTabChange?.(targetTab!)
-        }
+        if (!targetNavLink.className.match('nav-link')) return
+
+        const newTabId = targetNavLink.dataset.ytId
+        if (!newTabId) return
+        setActiveTabId(newTabId)
+        const targetTab = [...PRIMARY_TABS, ...playlistTabs].find(
+            (playlistTab) => playlistTab.ytPlaylistId === newTabId
+        )
+        if (targetTab) props.onTabChange?.(targetTab)
     }
 
     function handlePlaylistFormSubmit(playlistFormData: PlaylistFormData) {
@@ -69,21 +70,31 @@ export const Navbar = (props: NavbarProps) => {
             ...playlistTabs,
             {
                 title: playlistFormData.title,
-                id: `tab-${playlistId}`,
+                ytPlaylistId: playlistId,
                 ytPlaylistUrl: playlistFormData.url,
             },
         ])
     }
 
-    const NavLink = ({ data }: { data: PageTab }) => {
+    const NavLink = ({ data = {} as PageTab }) => {
         let className = 'nav-link'
-        if (data.id === activeTabId) className += ' active'
+        if (data.ytPlaylistId === activeTabId) className += ' active'
         if (data.ytPlaylistUrl) className += ' playlist-nav-link'
         return (
-            <a id={data.id} className={className}>
+            <a data-yt-id={data.ytPlaylistId} className={className}>
                 {data.title}
             </a>
         )
+    }
+
+    function handlePlaylistDelete(targetYtId: string): void {
+        localStorage.removeItem(`pl-${targetYtId}`)
+        const filteredPlaylistTab = playlistTabs.filter(
+            (tab) => tab.ytPlaylistId !== targetYtId
+        )
+        setPlaylistTabs(filteredPlaylistTab)
+        setActiveTabId(filteredPlaylistTab[0]?.ytPlaylistId ?? '')
+        props.onTabChange?.(filteredPlaylistTab[0])
     }
 
     return (
@@ -93,9 +104,10 @@ export const Navbar = (props: NavbarProps) => {
                 onCancel={() => setShowForm(false)}
                 onSubmit={handlePlaylistFormSubmit}
             />
+            <PlaylistNavContextMenu onDelete={handlePlaylistDelete} />
             <nav className="navbar" onClick={handleNavbarClick}>
                 {PRIMARY_TABS.map((primaryTab) => (
-                    <NavLink data={primaryTab} key={primaryTab.id} />
+                    <NavLink data={primaryTab} key={primaryTab.ytPlaylistId} />
                 ))}
 
                 {/* <div className="navbar__divider"></div> */}
@@ -114,7 +126,10 @@ export const Navbar = (props: NavbarProps) => {
                 </button>
                 <section className="navbar__playlist-wrapper">
                     {playlistTabs.map((playlistTab) => (
-                        <NavLink data={playlistTab} key={playlistTab.id} />
+                        <NavLink
+                            data={playlistTab}
+                            key={playlistTab.ytPlaylistId}
+                        />
                     ))}
                 </section>
             </nav>

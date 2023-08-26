@@ -63,40 +63,6 @@
     overflow: hidden;
 }
 
-.navbar {
-    display: flex;
-    flex-direction: column;
-    padding: 0.5em;
-    min-width: 240px;
-    .nav-link,
-    .new-playlist-btn {
-        cursor: pointer;
-        padding: 0.8em 1em;
-        border-radius: 8px;
-
-        &:hover {
-            background-color: #222;
-            transition: background-color 100ms ease-in-out;
-        }
-        &.active {
-            background-color: #222;
-        }
-    }
-
-    .navbar__divider {
-        height: 1px;
-        background-color: #292929;
-        margin: 1rem 0;
-    }
-}
-
-.navbar__playlist-wrapper {
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
-    height: 100%;
-}
-
 .new-playlist-btn {
     margin-bottom: 1rem;
     background-color: #333;
