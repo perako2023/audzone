@@ -37,18 +37,16 @@ export const MediaPlayer = () => {
             // prettier-ignore
             console.count('interval for internal player getter is running\n count ')
             const player = youTubePlayerRef.current?.getInternalPlayer()
-            if (player) {
-                setInternalPlayer(player as InternalPlayer)
-                setLoading(false)
-                clearInterval(interval)
-            }
+            if (!player) return
+            setInternalPlayer(player as InternalPlayer)
+            setLoading(false)
+            clearInterval(interval)
         }
         const interval = setInterval(tryUpdateInternalPlayer, 1000)
         //* will only check for videoId once
         if (!videoId) clearInterval(interval)
         return () => clearInterval(interval)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [youTubePlayerRef])
+    }, [videoId, youTubePlayerRef])
 
     function handlePlayPause() {
         setPlaying((prevPlaying) => {
@@ -60,24 +58,28 @@ export const MediaPlayer = () => {
     }
 
     function handleSkip(seconds: number) {
-        const newDuration = playedSeconds + seconds
-        if (newDuration <= 0) {
-            setPlayedSeconds(0)
-        } else {
-            setPlayedSeconds(newDuration)
+        let newDuration = playedSeconds + seconds
+        if (newDuration <= 0) newDuration = 0
+        setPlayedSeconds(() => {
             internalPlayer?.seekTo(newDuration)
-        }
+            return newDuration
+        })
     }
 
     function handleProgress(state: OnProgressProps): void {
         const currentTime = state.playedSeconds
-        setPlayedSeconds(Math.floor(currentTime))
+        setPlayedSeconds(() => {
+            internalPlayer?.seekTo(currentTime)
+            return Math.floor(currentTime)
+        })
     }
 
     function handleSliderSeek(event: ChangeEvent<HTMLInputElement>): void {
         const newDuration = event.target.valueAsNumber
-        internalPlayer?.seekTo(newDuration)
-        setPlayedSeconds(event.target.valueAsNumber)
+        setPlayedSeconds(() => {
+            internalPlayer?.seekTo(newDuration)
+            return newDuration
+        })
     }
 
     return (
@@ -90,7 +92,7 @@ export const MediaPlayer = () => {
                 ref={youTubePlayerRef}
                 height={'100%'}
                 width={'100%'}
-                // controls
+                controls
                 url={`https://www.youtube.com/watch?v=${videoId}`}
             />
             <div className={css['player-manager']}>
