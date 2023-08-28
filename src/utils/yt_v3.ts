@@ -25,9 +25,8 @@ type YtDataApiV3Item /* FilteredV3Item */ = {
     }
 }
 
+const API_KEY = import.meta.env.VITE_YT_V3_API
 export class YT_V3 {
-    static #API_KEY = 'AIzaSyDImdC9Fd9pQfowo8m5Yi-Hoj_tU8TRQ48' //REVIEW - keep it private
-
     static parsePlaylistId(url: string) {
         // const test = playlistUrl.match(/list=(.*)&/)![1];
         return url.match(/(?<=list=).*/)?.[0].substring(0, 34) ?? ''
@@ -42,7 +41,7 @@ export class YT_V3 {
                 '&maxResults=50' +
                 `&playlistId=${playlistId}` +
                 '&fields=items%2FcontentDetails(videoId)' +
-                `&key=${YT_V3.#API_KEY}`
+                `&key=${API_KEY}`
         ).then((res) => res.json())
 
         for (const item of sourceOfIds.items) {
@@ -69,7 +68,7 @@ export class YT_V3 {
             'https://youtube.googleapis.com/youtube/v3/videos?' +
                 'part=id%2C%20snippet%2C%20contentDetails' +
                 `&id=${videoIdList.join('%2C')}` +
-                `&key=${YT_V3.#API_KEY}`
+                `&key=${API_KEY}`
         ).then((res) => res.json())
 
         return response.items.map((item: YtDataApiV3Item) => {
